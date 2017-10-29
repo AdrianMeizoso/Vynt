@@ -52,15 +52,23 @@ void erase() {
 	std::cout << '\b';
 }
 
+void erase(int characters) {
+	for (int i = 0; i < characters; i++)
+	{
+		erase();
+	}
+}
+
 void Game::Inputloop()
 {
 	char key;
 	std::string player_input;
-	std::string anterior;
-	int sol;
+
+	std::string anterior = "";
 	std::vector<std::string> inputhistory;
-	std::vector<std::string>::iterator it = inputhistory.end();
-	std::vector<std::string>::reverse_iterator itRev = inputhistory.rbegin();
+	int it = inputhistory.size();
+
+
 	std::vector<std::string> args;
 	args.reserve(10);
 
@@ -84,39 +92,43 @@ void Game::Inputloop()
 				case KEY_UP: //Return
 					if (!inputhistory.empty())
 					{
-						if (player_input != "") {
-							inputhistory.push_back(player_input);
-							player_input = "";
-						}
-						else
+						if (it < inputhistory.size())
 						{
-							inputhistory.push_back(" ");
+							erase(anterior.length());
+							if (it > 0) --it;
+							anterior = inputhistory[it];
+						}
+
+						if (it == inputhistory.size())
+						{
+							erase(player_input.length());
+							anterior = inputhistory[it - 1];
+							if (it > 0) --it;
 						}
 						
-						if (it != inputhistory.begin()) {
-							--it;
-							++itRev;
-							//if (!Same(*it, anterior)) {
-								std::cout << "\n\n> ";
-								std::cout << *it;
-								anterior = *it;
-							//}
-						}
+						std::cout << inputhistory[it];
 					}
 					break;
 				case KEY_DOWN: //Return
 					if (!inputhistory.empty())
 					{
-						if (itRev != inputhistory.rbegin()) {
-							++it;
-							--itRev;
-							//if (!Same(*it, anterior)) {
-								std::cout << "\n\n> ";
-								std::cout << *it;
-								anterior = *it;
-							//}
+						if (it < inputhistory.size() - 1) {
+							erase(anterior.length());
 							
+							++it;
+							anterior = inputhistory[it];
+							//if (!Same(*it, anterior)) {
+							//}
+
+							std::cout << inputhistory[it];
 						}
+						else {
+							erase(anterior.size());
+							anterior = player_input;
+							std::cout << player_input;
+							it = inputhistory.size();
+						}
+
 					}
 					break;
 				}
@@ -125,9 +137,7 @@ void Game::Inputloop()
 				Tokenize(player_input, args);
 				if (!player_input.empty()) {
 					inputhistory.push_back(player_input);
-					it = inputhistory.end();
-					itRev = inputhistory.rbegin();
-					--it;
+					it = inputhistory.size();
 				}
 				std::cout << "\n";
 				break;
