@@ -68,7 +68,7 @@ void Game::Inputloop()
 
 	std::string anterior = "";
 	std::vector<std::string> inputhistory;
-	int it = inputhistory.size();
+	unsigned int it = inputhistory.size();
 
 	World world;
 

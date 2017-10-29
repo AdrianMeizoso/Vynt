@@ -7,6 +7,7 @@
 Player::Player(const char * title, const char * description, Room* room) :
 	Creature(title,	description, room)
 {
+	type = PLAYER;
 }
 
 Player::~Player()
@@ -15,7 +16,7 @@ Player::~Player()
 
 void Player::look(const std::vector<std::string>& args) const
 {
-	room->look(args);
+	room->look();
 
 	/*
 	if (args.size() > 1)
@@ -42,15 +43,19 @@ void Player::look(const std::vector<std::string>& args) const
 	*/
 }
 
-void Player::go(const std::vector<std::string>& args) const
+void Player::go(const std::vector<std::string>& args)
 {
-	if (args.size() > 1) {
+	if (args.size() == 2) {
 		Exit* exit = room->getExit(args[1]);
 
 		if (exit == nullptr)
 		{
-			std::cout << "\nThere is no exit at '" << args[1] << "'.\n";
-			return false;
+			std::cout << "There is no exit at '" << args[1] << "'.\n";
+		}
+		else
+		{
+			room = exit->destination;
+			room->look();
 		}
 	}
 	else

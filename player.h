@@ -8,5 +8,5 @@ public:
 	~Player();
 
 	void look(const std::vector<std::string>& args) const;
-	void go(const std::vector<std::string>& args) const;
+	void go(const std::vector<std::string>& args);
 };

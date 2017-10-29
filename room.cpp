@@ -1,5 +1,7 @@
 #include "room.h"
 #include "entity.h"
+#include "exit.h"
+#include "globals.h"
 #include <iostream>
 #include <string>
 
@@ -7,14 +9,14 @@
 Room::Room(const char * title, const char * description) :
 	Entity(title, description)
 {
-
+	type = ROOM;
 }
 
 Room::~Room()
 {
 }
 
-void Room::look(const std::vector<std::string>& args) const
+void Room::look() const
 {
 	std::cout << name << "\n";
 	std::cout << description << "\n";
@@ -27,7 +29,7 @@ Exit* Room::getExit(const std::string & direction) const
 		if ((*it)->type == EXIT)
 		{
 			Exit* ex = (Exit*)*it;
-			if (Same(ex->GetNameFrom(this), direction))
+			if (Same(ex->name, direction))
 				return ex;
 		}
 	}

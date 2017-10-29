@@ -1,5 +1,5 @@
 #pragma once
-#include <list>
+#include <vector>
 
 enum EntityType
 {
@@ -19,6 +19,7 @@ public:
 	virtual ~Entity();
 	virtual void tick();
 
+	EntityType type;
 	std::string name;
 	std::string description;
 
