@@ -1,10 +1,15 @@
 #pragma once
 #include "entity.h"
-class Creature :
-	public Entity
+#include "room.h"
+
+class Creature : public Entity
 {
 public:
-	Creature();
+	Creature(const char* name, const char* description, Room* room);
 	~Creature();
+
+public:
+	Room* room;
+
 };
 

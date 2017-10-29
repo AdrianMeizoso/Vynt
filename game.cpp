@@ -1,6 +1,8 @@
 #include <iostream>
 #include "game.h"
 #include "globals.h"
+#include "parser.h"
+#include "world.h"
 #include <conio.h>
 #include <string>
 #include <vector>
@@ -68,6 +70,7 @@ void Game::Inputloop()
 	std::vector<std::string> inputhistory;
 	int it = inputhistory.size();
 
+	World world;
 
 	std::vector<std::string> args;
 	args.reserve(10);
@@ -81,6 +84,12 @@ void Game::Inputloop()
 			key = _getch();
 			switch (key) {
 			case '\b': //Backspace
+				if (it != inputhistory.size())
+				{
+					player_input = inputhistory[it];
+					it = inputhistory.size();
+					anterior = "";
+				}
 				if (player_input.length() > 0)
 				{
 					player_input.pop_back();
@@ -117,8 +126,6 @@ void Game::Inputloop()
 							
 							++it;
 							anterior = inputhistory[it];
-							//if (!Same(*it, anterior)) {
-							//}
 
 							std::cout << inputhistory[it];
 						}
@@ -134,28 +141,62 @@ void Game::Inputloop()
 				}
 				break;
 			case '\r': //Return
-				Tokenize(player_input, args);
+				if (it != inputhistory.size())
+				{
+					Tokenize(inputhistory[it], args);
+				}
+				else {
+					Tokenize(player_input, args);
+				}
+				
 				if (!player_input.empty()) {
 					inputhistory.push_back(player_input);
-					it = inputhistory.size();
+					
 				}
+
+				it = inputhistory.size();
+				anterior = "";
+
 				std::cout << "\n";
 				break;
 			case 27: //Escape
 				std::cout << "\nYou cannot escape your destiny\n";
 				std::cout << "\n> ";
+				if (it != inputhistory.size())
+				{
+					it = inputhistory.size();
+					anterior = "";
+				}
 				break;
 			default:
+				if (it != inputhistory.size())
+				{
+					player_input = inputhistory[it];
+					it = inputhistory.size();
+					anterior = "";
+				}
 				player_input += key;
 				std::cout << key;
 			}
 		}
 
-		if (args.size() > 0 && Same(args[0], "quit"))
-			break;
+		world.tick();
 
 		if (args.size() > 0)
 		{
+			if (Same(args[0], ""))
+			{
+				std::cout << "The impassibility keeps you from moving forward\n";
+			}
+			else if (Same(args[0], "quit"))
+			{
+				break;
+			}
+			else
+			{
+				world.executeCommand(args);
+			}
+		
 			args.clear();
 			player_input = "";
 			std::cout << "\n> ";
