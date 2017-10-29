@@ -6,5 +6,8 @@ class Item :
 public:
 	Item(const char* title, const char* description);
 	~Item();
+
+	void look() const;
+	void lookDeeper() const;
 };
 
